@@ -1,0 +1,36 @@
+class Solution {
+public:
+    bool canBeValid(string s, string locked) {
+    if (s.size() % 2 != 0) return false;
+    int open = 0, close = 0;
+    for (int i = 0; i < s.size(); ++i) {
+        if (locked[i] == '1') {
+            open += (s[i] == '(') ? 1 : -1;
+        } else {
+            open++;
+        }
+        if (open < 0) return false; 
+    }  
+    for (int i = s.size() - 1; i >= 0; --i) {
+        if (locked[i] == '1') {
+            close += (s[i] == ')') ? 1 : -1;
+        } else {
+            close++; 
+        }
+        if (close < 0) return false; 
+    }
+    return true;
+}
+int main() {
+    string s = "))()))";
+    string locked = "010100";
+
+    if (canBeValid(s, locked)) {
+        cout << "The string can be made valid." << endl;
+    } else {
+        cout << "The string cannot be made valid." << endl;
+    }
+    return 0;
+}    
+
+};
