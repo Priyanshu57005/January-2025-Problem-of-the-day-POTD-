@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<string> wordSubsets(vector<string>& words1, vector<string>& words2) {
+        vector<int>v(26,0);
+        for(int i=0; i<words2.size(); i++)
+        {
+            vector<int>freq(26,0);
+            for(int j=0; j<words2[i].length(); j++)
+            {
+                freq[words2[i][j]-97]++;
+                v[words2[i][j]-97]=max(v[words2[i][j]-97],freq[words2[i][j]-97]);
+            }
+        }
+        vector<string>ans;
+        for(int i=0; i<words1.size(); i++)
+        {
+            vector<int>v1(26,0);
+            for(int j=0; j<words1[i].length(); j++)
+            {
+                v1[words1[i][j]-97]++;
+            }
+            int f = 0;
+            for(int j=0; j<26; j++)
+            {
+                if(v[j]>v1[j])
+                {
+                    f = 1;
+                    break;
+                }
+            }
+            if(f == 0)
+            ans.push_back(words1[i]);
+        }
+        return ans;
+    }
+};
