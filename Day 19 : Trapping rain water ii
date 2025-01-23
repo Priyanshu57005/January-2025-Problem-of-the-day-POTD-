@@ -1,0 +1,59 @@
+class Solution {
+public:
+    int trapRainWater(std::vector<std::vector<int>>& heightMap) {
+        int m = heightMap.size();
+        int n = heightMap.front().size();
+        std::vector<std::vector<int>> overflow(m);
+
+        using pair = std::pair<int, int>;
+        auto less = [&overflow](pair const& l, pair const& r) {
+            return overflow[r.first][r.second] < overflow[l.first][l.second];
+        };
+        
+        std::priority_queue<pair, std::vector<pair>, decltype(less)> queue(less);
+        for (int i = 0; i < m; ++i) {
+            if (i == 0 || i == m - 1) {
+                overflow[i].resize(n);
+                for (int j = 0; j < n; ++j) {
+                    overflow[i][j] = heightMap[i][j];
+                    queue.push({ i, j });
+                }
+            }
+            else {
+                overflow[i].resize(n, std::numeric_limits<int>::max());
+                overflow[i][0]     = heightMap[i][0];
+                overflow[i][n - 1] = heightMap[i][n - 1];
+                queue.push({ i, 0 });
+                queue.push({ i, n - 1 });
+            }
+        }
+
+        auto eval = [&overflow, &heightMap, &queue, &m, &n](int over, int r, int c) {
+            if (overflow[r][c] == std::numeric_limits<int>::max()) {
+                overflow[r][c] = std::max(over, heightMap[r][c]);
+                queue.push({ r, c });
+            }
+        };
+
+        while (!queue.empty()) {
+            auto [r, c] = queue.top();
+            queue.pop();
+            int over = overflow[r][c];
+            if (r + 1 < m)
+                eval(over, r + 1, c);
+            if (r - 1 >= 0)
+                eval(over, r - 1, c);
+            if (c + 1 < n)
+                eval(over, r, c + 1);
+            if (c - 1 >= 0)
+                eval(over, r, c - 1);
+        }
+
+        int capacity = 0;
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j)
+                capacity += overflow[i][j] - heightMap[i][j];
+        }
+        return capacity;
+    }
+};
