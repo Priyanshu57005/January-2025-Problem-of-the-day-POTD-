@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<int> findThePrefixCommonArray(vector<int>& A, vector<int>& B) {
+        vector<int> vals1(51,0);
+        vector<int> vals2(51,0);
+        int n = A.size();
+        vector<int> ans;
+        int cnt = 0;
+
+        for(int i=0; i<n; i++){
+            vals1[A[i]] = 1;
+            vals2[B[i]] = 1;
+
+            if(A[i] == B[i]){
+                cnt++;
+            } else {
+                if(vals1[B[i]]) cnt++;
+                if(vals2[A[i]]) cnt++;
+            }
+            ans.push_back(cnt);
+        }
+        return ans;
+    }
+};
