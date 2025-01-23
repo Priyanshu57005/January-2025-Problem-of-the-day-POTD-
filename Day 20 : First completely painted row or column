@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int firstCompleteIndex(vector<int>& arr, vector<vector<int>>& mat) {
+        map<int,int>r,c;
+        for(int i=0; i<mat.size(); i++)
+        {
+            for(int j=0; j<mat[0].size(); j++)
+            {
+                r[mat[i][j]] = i;
+                c[mat[i][j]] = j;
+            }
+        }
+        vector<int>x(mat.size(),0), y(mat[0].size(),0);
+        for(int i=0; i<arr.size(); i++)
+        {
+            if(++x[r[arr[i]]] == mat[0].size())
+            return i;
+            if(++y[c[arr[i]]] == mat.size())
+            return i;
+        }
+        return -1;
+    }
+};
