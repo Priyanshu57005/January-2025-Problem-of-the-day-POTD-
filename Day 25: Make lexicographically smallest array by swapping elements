@@ -1,0 +1,15 @@
+class Solution {
+public:
+    vector<int> lexicographicallySmallestArray(vector<int>& nums, int limit) {
+        vector<int> ix(size(nums)), r(size(nums)); 
+        iota(begin(ix), end(ix), 0);
+        sort(begin(ix), end(ix), [&](int a, int b)
+        { return nums[a] < nums[b]; });
+        priority_queue<int, vector<int>, greater<>> q;
+        for(int i = 0,j = 0; i < size(ix); ++i) {
+            q.push(ix[i]);
+            if ( i == size(ix) -1 || nums[ix[i + 1]] - nums[ix[i]] > limit)
+                while (size(q)) r[q.top()] = nums[ix[j++]], q.pop();
+        } return r;
+    }
+};
