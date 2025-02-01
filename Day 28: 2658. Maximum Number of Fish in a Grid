@@ -1,0 +1,23 @@
+class Solution {
+    int n , m;
+    vector<vector<bool>> visited;
+public:
+    int dip(vector<vector<int>> & grid, int i, int j){
+        if(i<0 || i>=n || j<0 || j>=m || grid[i][j] == 0 || visited[i][j]){
+            return 0;
+        }
+        visited[i][j] = true;
+        return grid[i][j]+dip(grid,i+1,j)+dip(grid,i-1,j)+dip(grid,i,j+1)+dip(grid,i,j-1);
+    }
+    int findMaxFish(vector<vector<int>>& grid) {
+        n = grid.size(), m = grid[0].size();
+        visited.resize(n, vector<bool>(m, false));
+        int x = 0;
+        for(int i = 0; i < n; ++i){
+            for(int j = 0; j < m; j++){
+                x = max(x, dip(grid, i , j));
+            }
+        }
+        return x;
+    }
+};
