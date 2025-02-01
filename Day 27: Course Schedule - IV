@@ -1,0 +1,33 @@
+class Solution {
+public:
+    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
+        vector<vector<int>> adj(numCourses);
+        for (const auto& pre : prerequisites) {
+            adj[pre[0]].push_back(pre[1]);
+        }
+
+        // Perform DFS to calculate transitive closure
+        vector<vector<bool>> reachable(numCourses, vector<bool>(numCourses, false));
+        for (int i = 0; i < numCourses; ++i) {
+            dfs(adj, i, reachable, i); 
+        }
+
+        // Answer the queries using the transitive closure
+        vector<bool> answer(queries.size());
+        for (int i = 0; i < queries.size(); ++i) {
+            answer[i] = reachable[queries[i][0]][queries[i][1]];
+        }
+
+        return answer;
+    }
+
+private:
+    void dfs(const vector<vector<int>>& adj, int node, vector<vector<bool>>& reachable, int source) {
+        reachable[source][node] = true; 
+        for (int neighbor : adj[node]) {
+            if (!reachable[source][neighbor]) {
+                dfs(adj, neighbor, reachable, source);
+            }
+        }
+    }
+};
